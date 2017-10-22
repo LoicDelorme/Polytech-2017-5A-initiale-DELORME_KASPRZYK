@@ -9,7 +9,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
-
         <TextView
             android:id="@+id/offline_mode_text_view"
             android:layout_width="match_parent"
@@ -39,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <Button
                 android:id="@+id/offline_mode_button_teamvsteam"
                 android:layout_width="match_parent"
@@ -53,7 +51,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
-
         <TextView
             android:id="@+id/online_mode_text_view"
             android:layout_width="match_parent"
