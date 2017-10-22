@@ -14,10 +14,5 @@
     <string name="lifes_text_view_label">Vie(s) : %s</string>
     <string name="player_text_view_label">Joueur : %s</string>
     <string name="score_text_view_label">Score : %s</string>
-    <string name="question_text_view_label">D\'où venez-vous ?</string>
     <string name="current_score_text_label">valeur : 5 point(s)</string>
-    <string name="answers_button_answer1_label">France</string>
-    <string name="answers_button_answer2_label">Allemagne</string>
-    <string name="answers_button_answer3_label">Italie</string>
-    <string name="answers_button_answer4_label">Suisse</string>
 </resources>
