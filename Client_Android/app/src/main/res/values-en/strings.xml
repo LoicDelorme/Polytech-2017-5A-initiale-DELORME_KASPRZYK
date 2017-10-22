@@ -14,10 +14,5 @@
     <string name="lifes_text_view_label">Life(s) : %s</string>
     <string name="player_text_view_label">Player : %s</string>
     <string name="score_text_view_label">Score : %s</string>
-    <string name="question_text_view_label">Where do you come from?</string>
     <string name="current_score_text_label">value: 5 point(s)</string>
-    <string name="answers_button_answer1_label">France</string>
-    <string name="answers_button_answer2_label">Germany</string>
-    <string name="answers_button_answer3_label">Italy</string>
-    <string name="answers_button_answer4_label">Switzerland</string>
 </resources>
