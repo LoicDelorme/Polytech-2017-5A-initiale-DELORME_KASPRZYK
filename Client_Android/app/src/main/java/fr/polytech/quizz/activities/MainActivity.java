@@ -1,5 +1,6 @@
 package fr.polytech.quizz.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import fr.polytech.quizz.R;
+import fr.polytech.quizz.entities.IntentRequest;
 import fr.polytech.quizz.fragments.GameFragment;
 import fr.polytech.quizz.fragments.HomeFragment;
+import fr.polytech.quizz.services.GameEngineIntentService;
 
 public class MainActivity extends AppCompatActivity implements IHome {
 
@@ -80,14 +83,26 @@ public class MainActivity extends AppCompatActivity implements IHome {
         transaction.replace(fragmentContainerId, gameFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-
-        final Toast toast = Toast.makeText(getApplicationContext(), mode.toString(), Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     @Override
     public void notifyAnswerHasBeenSelected(CharSequence answer) {
-        final Toast toast = Toast.makeText(getApplicationContext(), answer, Toast.LENGTH_SHORT);
+        final Intent intent = new Intent(this, GameEngineIntentService.class);
+        intent.putExtra(GameEngineIntentService.REQUEST_MESSAGE_KEY, new IntentRequest(GameEngineIntentService.ANSWER_MESSAGE_KEY, answer.toString()));
+        startService(intent);
+    }
+
+    @Override
+    public void notifyNoMoreQuestions() {
+        final HomeFragment homeFragment = new HomeFragment();
+        homeFragment.setArguments(getIntent().getExtras());
+
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(fragmentContainerId, homeFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        final Toast toast = Toast.makeText(getApplicationContext(), "No more questions!", Toast.LENGTH_SHORT);
         toast.show();
     }
 }

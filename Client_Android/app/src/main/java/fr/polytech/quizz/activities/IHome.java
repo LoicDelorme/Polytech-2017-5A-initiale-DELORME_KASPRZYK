@@ -5,4 +5,6 @@ public interface IHome {
     public void notifyModeHasBeenSelected(Mode mode);
 
     public void notifyAnswerHasBeenSelected(CharSequence answer);
+
+    public void notifyNoMoreQuestions();
 }

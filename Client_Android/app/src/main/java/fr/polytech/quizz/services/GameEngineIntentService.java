@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import fr.polytech.quizz.entities.Question;
 import fr.polytech.quizz.entities.IntentRequest;
+import fr.polytech.quizz.entities.Question;
 import fr.polytech.quizz.entities.builders.QuestionBuilder;
 
 public class GameEngineIntentService extends IntentService {
@@ -29,15 +29,9 @@ public class GameEngineIntentService extends IntentService {
 
     public static String QUESTION_ACTION = "question_action";
 
-    private static final List<Question> questions = new ArrayList<Question>();
+    private static final List<Question> questions = new ArrayList<Question>(Arrays.asList(new QuestionBuilder().addQuestion("D'où venez-vous ?").addAvailableAnswer("France").addAvailableAnswer("Allemagne").addAvailableAnswer("Italie").addAvailableAnswer("Suisse").addCorrectAnswer("France").build(), new QuestionBuilder().addQuestion("Où se situe Polytech Lyon ?").addAvailableAnswer("Paris").addAvailableAnswer("Marseille").addAvailableAnswer("Lyon").addAvailableAnswer("Toulouse").addCorrectAnswer("Lyon").build()));
 
     private static final AtomicInteger counter = new AtomicInteger(0);
-
-    {
-        questions.add(new QuestionBuilder().addQuestion("D'où venez-vous ?").addAvailableAnswer("France").addAvailableAnswer("Allemagne").addAvailableAnswer("Italie").addAvailableAnswer("Suisse").addCorrectAnswer("France").build());
-        questions.add(new QuestionBuilder().addQuestion("Où se situe Polytech Lyon ?").addAvailableAnswer("Paris").addAvailableAnswer("Marseille").addAvailableAnswer("Lyon").addAvailableAnswer("Toulouse").addCorrectAnswer("Lyon").build());
-        Collections.shuffle(questions);
-    }
 
     public GameEngineIntentService() {
         super(INTENT_SERVICE_NAME);
@@ -46,34 +40,42 @@ public class GameEngineIntentService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         final IntentRequest userRequest = (IntentRequest) intent.getSerializableExtra(REQUEST_MESSAGE_KEY);
-        switch (userRequest.getMessageKey()) {
+
+        final String messageKey = userRequest.getMessageKey();
+        final String message = userRequest.getMessage();
+        switch (messageKey) {
             case QUESTION_MESSAGE_KEY:
-                sendNextQuestion();
+                processNextQuestion();
                 break;
             case ANSWER_MESSAGE_KEY:
-                checkSubmittedAnswer(userRequest.getMessage());
+                checkAnswer(message);
                 break;
         }
     }
 
-    private void sendNextQuestion() {
-        final int nextQuestionOffset = counter.getAndIncrement();
-        final Question nextQuestion = (nextQuestionOffset < questions.size() ? questions.get(nextQuestionOffset) : null);
+    private void processNextQuestion() {
+        final int questionOffset = counter.get();
+        Question question = null;
+        if (questionOffset < questions.size()) {
+            question = questions.get(questionOffset);
+        } else {
+            counter.set(0);
+        }
 
         final Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(QUESTION_ACTION);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra(QUESTION_MESSAGE_KEY, nextQuestion);
+        broadcastIntent.putExtra(QUESTION_MESSAGE_KEY, question);
         sendBroadcast(broadcastIntent);
     }
 
-    private void checkSubmittedAnswer(String submittedAnswer) {
-        final Question currentQuestion = questions.get(counter.get());
+    private void checkAnswer(String submittedAnswer) {
+        final Question currentQuestion = questions.get(counter.getAndIncrement());
 
         final Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(STATUS_ACTION);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra(STATUS_MESSAGE_KEY, (currentQuestion.isCorrectAnswer(submittedAnswer) ? "Answer correct!" : "Answer incorrect!"));
+        broadcastIntent.putExtra(STATUS_MESSAGE_KEY, (currentQuestion.isCorrectAnswer(submittedAnswer) ? "Correct answer!" : "Incorrect answer!"));
         sendBroadcast(broadcastIntent);
     }
 }
