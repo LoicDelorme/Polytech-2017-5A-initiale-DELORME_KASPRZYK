@@ -1,18 +1,14 @@
 <resources>
-    <string name="app_name">Quizz Application</string>
+    <string name="app_name">Beers Application</string>
 
     <!-- Home Fragment-->
-    <string name="offline_mode_text_view_label">Offline</string>
-    <string name="offline_mode_button_1vsAI_label">1 vs AI</string>
-    <string name="offline_mode_button_1vs1_label">1 vs 1</string>
-    <string name="offline_mode_button_teamvsteam_label">Team A vs Team B</string>
-    <string name="online_mode_text_view_label">Online</string>
-    <string name="online_mode_button_1vs1_label">1 vs 1</string>
+    <string name="beers_button_label">Get all beers</string>
 
-    <!-- Game Fragment-->
-    <string name="team_text_view_label">Team : %s</string>
-    <string name="lifes_text_view_label">Life(s) : %s</string>
-    <string name="player_text_view_label">Player : %s</string>
-    <string name="score_text_view_label">Score : %s</string>
-    <string name="current_score_text_label">value: 5 point(s)</string>
+    <!-- Description Fragment-->
+    <string name="beer_name_text_view_label">Name</string>
+    <string name="beer_fist_brewed_text_view_label">First brewed</string>
+    <string name="beer_description_text_view_label">Description</string>
+    <string name="beer_abv_text_view_label">ABV</string>
+    <string name="beer_ibu_text_view_label">IBU</string>
+    <string name="beer_brewers_tips_text_view_label">Tip(s)</string>
 </resources>
