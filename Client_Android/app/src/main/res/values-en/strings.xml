@@ -5,6 +5,7 @@
     <string name="beers_button_label">Get all beers</string>
 
     <!-- Description Fragment-->
+    <string name="beer_image_text_view_label">Picture</string>
     <string name="beer_name_text_view_label">Name</string>
     <string name="beer_fist_brewed_text_view_label">First brewed</string>
     <string name="beer_description_text_view_label">Description</string>

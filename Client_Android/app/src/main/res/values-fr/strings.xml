@@ -5,6 +5,7 @@
     <string name="beers_button_label">Récupérer toutes les bières</string>
 
     <!-- Description Fragment-->
+    <string name="beer_image_text_view_label">Image</string>
     <string name="beer_name_text_view_label">Nom</string>
     <string name="beer_fist_brewed_text_view_label">Première brassée</string>
     <string name="beer_description_text_view_label">Description</string>
