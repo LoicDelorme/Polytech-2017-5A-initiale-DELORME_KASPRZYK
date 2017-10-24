@@ -8,10 +8,16 @@
 - Git workflow
 
 ## Sujet
-Coming soon...
+Le but de ces TPs était de manipuler différents aspects de la programmation Android dont :
+- Layouts
+- Fragments
+- Intent Service
+- API RESTful
 
 ## Technologies
 - Android
 
 ## Librairies & Licences
-Coming soon...
+- retrofit (Apache-2.0)
+- converter-gson (Apache-2.0)
+- picasso (Apache-2.0)
