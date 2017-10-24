@@ -1,21 +1,29 @@
 package fr.polytech.quizz.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 import fr.polytech.quizz.R;
-import fr.polytech.quizz.entities.IntentRequest;
-import fr.polytech.quizz.fragments.GameFragment;
+import fr.polytech.quizz.adapters.BeersArrayAdapter;
+import fr.polytech.quizz.entities.Beer;
+import fr.polytech.quizz.fragments.DescriptionFragment;
 import fr.polytech.quizz.fragments.HomeFragment;
-import fr.polytech.quizz.services.GameEngineIntentService;
+import fr.polytech.quizz.services.BeersIntentService;
 
 public class MainActivity extends AppCompatActivity implements IHome {
 
     private static final int fragmentContainerId = R.id.fragment_container;
+
+    private final BroadcastReceiver statusBroadcastReceiver = new BeerBroadcastReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +52,20 @@ public class MainActivity extends AppCompatActivity implements IHome {
     protected void onResume() {
         super.onResume();
         logMessage("onResume");
+
+        final IntentFilter intentBeersFilter = new IntentFilter();
+        intentBeersFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        intentBeersFilter.addAction(BeersIntentService.BEERS_ACTION);
+
+        registerReceiver(this.statusBroadcastReceiver, intentBeersFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         logMessage("onPause");
+
+        unregisterReceiver(this.statusBroadcastReceiver);
     }
 
     @Override
@@ -75,34 +91,33 @@ public class MainActivity extends AppCompatActivity implements IHome {
     }
 
     @Override
-    public void notifyModeHasBeenSelected(Mode mode) {
-        final GameFragment gameFragment = new GameFragment();
-        gameFragment.setArguments(getIntent().getExtras());
+    public void notifyRetrieveBeers() {
+        startService(new Intent(this, BeersIntentService.class));
+    }
+
+    @Override
+    public void notifyBeerHasBeenSelected(Beer beer) {
+        final Bundle extras = getIntent().getExtras() == null ? new Bundle() : getIntent().getExtras();
+        extras.putSerializable(BeersIntentService.BEERS_MESSAGE_KEY, beer);
+
+        final DescriptionFragment descriptionFragment = new DescriptionFragment();
+        descriptionFragment.setArguments(extras);
 
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(fragmentContainerId, gameFragment);
+        transaction.replace(fragmentContainerId, descriptionFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    @Override
-    public void notifyAnswerHasBeenSelected(CharSequence answer) {
-        final Intent intent = new Intent(this, GameEngineIntentService.class);
-        intent.putExtra(GameEngineIntentService.REQUEST_MESSAGE_KEY, new IntentRequest(GameEngineIntentService.ANSWER_MESSAGE_KEY, answer.toString()));
-        startService(intent);
-    }
+    private class BeerBroadcastReceiver extends BroadcastReceiver {
 
-    @Override
-    public void notifyNoMoreQuestions() {
-        final HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setArguments(getIntent().getExtras());
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final ArrayList<Beer> beers = (ArrayList<Beer>) intent.getSerializableExtra(BeersIntentService.BEERS_MESSAGE_KEY);
+            final BeersArrayAdapter beersArrayAdapter = new BeersArrayAdapter(getApplicationContext(), R.layout.adapter_beers, beers, MainActivity.this);
 
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(fragmentContainerId, homeFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-        final Toast toast = Toast.makeText(getApplicationContext(), "No more questions!", Toast.LENGTH_SHORT);
-        toast.show();
+            final ListView beersListView = (ListView) findViewById(R.id.beers_list_view);
+            beersListView.setAdapter(beersArrayAdapter);
+        }
     }
 }
