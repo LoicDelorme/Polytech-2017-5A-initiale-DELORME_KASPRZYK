@@ -9,21 +9,27 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import fr.polytech.quizz.R;
 import fr.polytech.quizz.adapters.BeersArrayAdapter;
 import fr.polytech.quizz.entities.Beer;
-import fr.polytech.quizz.fragments.DescriptionFragment;
+import fr.polytech.quizz.entities.IntentRequest;
+import fr.polytech.quizz.fragments.BeerDescriptionFragment;
+import fr.polytech.quizz.fragments.BeerHomeFragment;
+import fr.polytech.quizz.fragments.GameHomeFragment;
+import fr.polytech.quizz.fragments.GameQuestionFragment;
 import fr.polytech.quizz.fragments.HomeFragment;
 import fr.polytech.quizz.services.BeersIntentService;
+import fr.polytech.quizz.services.GameEngineIntentService;
 
 public class MainActivity extends AppCompatActivity implements IHome {
 
     private static final int fragmentContainerId = R.id.fragment_container;
 
-    private final BroadcastReceiver statusBroadcastReceiver = new BeerBroadcastReceiver();
+    private final BroadcastReceiver beerBroadcastReceiver = new BeerBroadcastReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements IHome {
         intentBeersFilter.addCategory(Intent.CATEGORY_DEFAULT);
         intentBeersFilter.addAction(BeersIntentService.BEERS_ACTION);
 
-        registerReceiver(this.statusBroadcastReceiver, intentBeersFilter);
+        registerReceiver(this.beerBroadcastReceiver, intentBeersFilter);
     }
 
     @Override
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements IHome {
         super.onPause();
         logMessage("onPause");
 
-        unregisterReceiver(this.statusBroadcastReceiver);
+        unregisterReceiver(this.beerBroadcastReceiver);
     }
 
     @Override
@@ -91,6 +97,60 @@ public class MainActivity extends AppCompatActivity implements IHome {
     }
 
     @Override
+    public void notifyQuestionApplicationHasBeenSelected() {
+        final GameHomeFragment gameHomeFragment = new GameHomeFragment();
+        gameHomeFragment.setArguments(getIntent().getExtras());
+
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(fragmentContainerId, gameHomeFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void notifyBeerApplicationHasBeenSelected() {
+        final BeerHomeFragment beerHomeFragment = new BeerHomeFragment();
+        beerHomeFragment.setArguments(getIntent().getExtras());
+
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(fragmentContainerId, beerHomeFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void notifyModeHasBeenSelected(Mode mode) {
+        final GameQuestionFragment gameQuestionFragment = new GameQuestionFragment();
+        gameQuestionFragment.setArguments(getIntent().getExtras());
+
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(fragmentContainerId, gameQuestionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void notifyAnswerHasBeenSelected(CharSequence answer) {
+        final Intent intent = new Intent(this, GameEngineIntentService.class);
+        intent.putExtra(GameEngineIntentService.REQUEST_MESSAGE_KEY, new IntentRequest(GameEngineIntentService.ANSWER_MESSAGE_KEY, answer.toString()));
+        startService(intent);
+    }
+
+    @Override
+    public void notifyNoMoreQuestions() {
+        final GameHomeFragment gameHomeFragment = new GameHomeFragment();
+        gameHomeFragment.setArguments(getIntent().getExtras());
+
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(fragmentContainerId, gameHomeFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        final Toast toast = Toast.makeText(getApplicationContext(), "No more questions!", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    @Override
     public void notifyRetrieveBeers() {
         startService(new Intent(this, BeersIntentService.class));
     }
@@ -100,11 +160,11 @@ public class MainActivity extends AppCompatActivity implements IHome {
         final Bundle extras = getIntent().getExtras() == null ? new Bundle() : getIntent().getExtras();
         extras.putParcelable(BeersIntentService.BEERS_MESSAGE_KEY, beer);
 
-        final DescriptionFragment descriptionFragment = new DescriptionFragment();
-        descriptionFragment.setArguments(extras);
+        final BeerDescriptionFragment beerDescriptionFragment = new BeerDescriptionFragment();
+        beerDescriptionFragment.setArguments(extras);
 
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(fragmentContainerId, descriptionFragment);
+        transaction.replace(fragmentContainerId, beerDescriptionFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

@@ -9,13 +9,15 @@ import android.view.View;
 import fr.polytech.quizz.R;
 import fr.polytech.quizz.activities.IHome;
 
-public class HomeFragment extends AbstractFragment implements View.OnClickListener {
+public class BeerHomeFragment extends AbstractFragment implements View.OnClickListener {
+
+    private static final int beersButtonId = R.id.beers_button;
 
     private IHome home;
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_home;
+        return R.layout.fragment_beer_home;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class HomeFragment extends AbstractFragment implements View.OnClickListen
         try {
             this.home = (IHome) context;
         } catch (ClassCastException ex) {
-            Log.e("HomeFragment", "ClassCastException", ex);
+            Log.e("BeerHomeFragment", "ClassCastException", ex);
         }
     }
 
@@ -33,16 +35,11 @@ public class HomeFragment extends AbstractFragment implements View.OnClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getActivity().findViewById(R.id.question_app_button).setOnClickListener(this);
-        getActivity().findViewById(R.id.beer_app_button).setOnClickListener(this);
+        getActivity().findViewById(beersButtonId).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.question_app_button) {
-            this.home.notifyQuestionApplicationHasBeenSelected();
-        } else if (view.getId() == R.id.beer_app_button) {
-            this.home.notifyBeerApplicationHasBeenSelected();
-        }
+        this.home.notifyRetrieveBeers();
     }
 }

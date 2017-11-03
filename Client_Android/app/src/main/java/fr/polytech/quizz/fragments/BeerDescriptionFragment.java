@@ -12,11 +12,11 @@ import fr.polytech.quizz.adapters.BeersArrayAdapter;
 import fr.polytech.quizz.entities.Beer;
 import fr.polytech.quizz.services.BeersIntentService;
 
-public class DescriptionFragment extends AbstractFragment {
+public class BeerDescriptionFragment extends AbstractFragment {
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_description;
+        return R.layout.fragment_beer_description;
     }
 
     @Override
