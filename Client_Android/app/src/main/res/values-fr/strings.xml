@@ -1,10 +1,29 @@
 <resources>
-    <string name="app_name">Beers Application</string>
+    <string name="app_name">Application</string>
 
-    <!-- Home Fragment-->
+    <!-- Applications -->
+    <string name="question_app">Question Application</string>
+    <string name="beer_app">Beer Application</string>
+
+    <!-- Game Home Fragment -->
+    <string name="offline_mode_text_view_label">Hors ligne</string>
+    <string name="offline_mode_button_1vsAI_label">1 vs IA</string>
+    <string name="offline_mode_button_1vs1_label">1 vs 1</string>
+    <string name="offline_mode_button_teamvsteam_label">Equipe A vs Equipe B</string>
+    <string name="online_mode_text_view_label">En ligne</string>
+    <string name="online_mode_button_1vs1_label">1 vs 1</string>
+
+    <!-- Game Question Fragment -->
+    <string name="team_text_view_label">Equipe : %s</string>
+    <string name="lifes_text_view_label">Vie(s) : %s</string>
+    <string name="player_text_view_label">Joueur : %s</string>
+    <string name="score_text_view_label">Score : %s</string>
+    <string name="current_score_text_label">valeur : 5 point(s)</string>
+
+    <!-- Beer Home Fragment -->
     <string name="beers_button_label">Récupérer toutes les bières</string>
 
-    <!-- Description Fragment-->
+    <!-- Beer Description Fragment -->
     <string name="beer_image_text_view_label">Image</string>
     <string name="beer_name_text_view_label">Nom</string>
     <string name="beer_fist_brewed_text_view_label">Première brassée</string>

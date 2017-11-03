@@ -12,18 +12,18 @@ import fr.polytech.quizz.adapters.BeersArrayAdapter;
 import fr.polytech.quizz.entities.Beer;
 import fr.polytech.quizz.services.BeersIntentService;
 
-public class DescriptionFragment extends AbstractFragment {
+public class BeerDescriptionFragment extends AbstractFragment {
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_description;
+        return R.layout.fragment_beer_description;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final Beer beer = (Beer) getArguments().getSerializable(BeersIntentService.BEERS_MESSAGE_KEY);
+        final Beer beer = (Beer) getArguments().getParcelable(BeersIntentService.BEERS_MESSAGE_KEY);
 
         final ImageView beerImageView = (ImageView) getActivity().findViewById(R.id.beer_image_image_view);
         Picasso.with(getContext()).load(beer.getImage_url()).resize(BeersArrayAdapter.BEER_IMAGE_WIDTH, BeersArrayAdapter.BEER_IMAGE_HEIGHT).into(beerImageView);
