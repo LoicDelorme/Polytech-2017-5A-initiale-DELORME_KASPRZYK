@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -18,6 +17,7 @@ import java.util.List;
 import fr.polytech.quizz.R;
 import fr.polytech.quizz.activities.IHome;
 import fr.polytech.quizz.entities.Beer;
+import fr.polytech.quizz.holders.BeerViewHolder;
 
 public class BeersArrayAdapter extends ArrayAdapter<Beer> implements View.OnClickListener {
 
@@ -56,23 +56,31 @@ public class BeersArrayAdapter extends ArrayAdapter<Beer> implements View.OnClic
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        BeerViewHolder beerViewHolder = null;
+
+        if (convertView == null) {
+            convertView = this.layoutInflater.inflate(R.layout.adapter_beers, null);
+
+            beerViewHolder = new BeerViewHolder();
+            beerViewHolder.setBeerImageView((ImageView) convertView.findViewById(R.id.beer_image_image_view));
+            beerViewHolder.setBeerNameTextView((TextView) convertView.findViewById(R.id.beer_name_text_view));
+
+            convertView.setTag(beerViewHolder);
+            convertView.setOnClickListener(this);
+        } else {
+            beerViewHolder = (BeerViewHolder) convertView.getTag();
+        }
+
         final Beer beer = getItem(position);
-        final LinearLayout beerItemLayout = (LinearLayout) this.layoutInflater.inflate(R.layout.adapter_beers, parent, false);
+        Picasso.with(this.context).load(beer.getImage_url()).resize(BEER_IMAGE_WIDTH, BEER_IMAGE_HEIGHT).into(beerViewHolder.getBeerImageView());
+        beerViewHolder.getBeerNameTextView().setText(beer.getName());
+        beerViewHolder.setBeer(beer);
 
-        final ImageView beerImageView = (ImageView) beerItemLayout.findViewById(R.id.beer_image_image_view);
-        Picasso.with(this.context).load(beer.getImage_url()).resize(BEER_IMAGE_WIDTH, BEER_IMAGE_HEIGHT).into(beerImageView);
-
-        final TextView beerNameTextView = (TextView) beerItemLayout.findViewById(R.id.beer_name_text_view);
-        beerNameTextView.setText(beer.getName());
-
-        beerItemLayout.setOnClickListener(this);
-        beerItemLayout.setTag(beer);
-
-        return beerItemLayout;
+        return convertView;
     }
 
     @Override
     public void onClick(View view) {
-        this.home.notifyBeerHasBeenSelected((Beer) view.getTag());
+        this.home.notifyBeerHasBeenSelected(((BeerViewHolder) view.getTag()).getBeer());
     }
 }
