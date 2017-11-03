@@ -4,20 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="15dp">
-    <LinearLayout
+    <Button
+        android:id="@+id/question_app_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <Button
-            android:id="@+id/beers_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/beers_button_label" />
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/beers_list_view"
+        android:text="@string/question_app" />
+    <Button
+        android:id="@+id/beer_app_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:text="@string/beer_app" />
 </LinearLayout>

@@ -3,9 +3,7 @@ package fr.polytech.quizz.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
-public class Beer implements Parcelable, Serializable {
+public class Beer implements Parcelable {
 
     private String name;
 
