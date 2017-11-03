@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements IHome {
     @Override
     public void notifyBeerHasBeenSelected(Beer beer) {
         final Bundle extras = getIntent().getExtras() == null ? new Bundle() : getIntent().getExtras();
-        extras.putSerializable(BeersIntentService.BEERS_MESSAGE_KEY, beer);
+        extras.putParcelable(BeersIntentService.BEERS_MESSAGE_KEY, beer);
 
         final DescriptionFragment descriptionFragment = new DescriptionFragment();
         descriptionFragment.setArguments(extras);
